@@ -1,5 +1,6 @@
 import pygame
-from Constant import Const
+from Constant import *
+from Pieces import *
 
 
 def Draw_Board():
@@ -58,12 +59,46 @@ def Draw_Pieces():
                     Const.screen.blit(Const.white_rook, (pos_x, pos_y))
 
 
+def piece_identifier(event, board):
+    pos_x = event.pos[0]//(Const.width//8)
+    pos_y = event.pos[1]//(Const.height//8)
+    if board[pos_y][pos_x] == (Const.bishop, True):
+        print("black_bishop")
+    elif board[pos_y][pos_x] == (Const.bishop, False):
+        print("white_bishop")
+    elif board[pos_y][pos_x] == (Const.king, True):
+        print("black_king")
+    elif board[pos_y][pos_x] == (Const.king, False):
+        print("white_king")
+    elif board[pos_y][pos_x] == (Const.knight, True):
+        print("black_knight")
+    elif board[pos_y][pos_x] == (Const.knight, False):
+        print("white_knight")
+    elif board[pos_y][pos_x] == (Const.pawn, True):
+        print("black_pawn")
+    elif board[pos_y][pos_x] == (Const.pawn, False):
+        print("white_pawn")
+    elif board[pos_y][pos_x] == (Const.queen, True):
+        print("black_queen")
+    elif board[pos_y][pos_x] == (Const.queen, False):
+        print("white_queen")
+    elif board[pos_y][pos_x] == (Const.rook, True):
+        print("black_rook")
+    elif board[pos_y][pos_x] == (Const.rook, False):
+        print("white_rook")
+
+
 def main():
+    end = True
+    board = Const.matrix
     Draw_Board()
     Draw_Pieces()
     pygame.display.update()
-    while 1:
-        pass
+    pygame.display.set_caption("Chess")
+    while end:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                piece_identifier(event, board)
 
 
 main()
