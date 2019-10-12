@@ -1,7 +1,6 @@
 import pygame
 from Constant import *
 
-
 def exist(pos_y, pos_x):
     if pos_x >= 8 or pos_y >= 8 or pos_x < 0 or pos_y < 0:
         return False
@@ -9,15 +8,18 @@ def exist(pos_y, pos_x):
 
 
 class Bishop:
-    pass
+    def __init__(self, color):
+        self.color = color
 
 
 class King:
-    pass
+    def __init__(self, color):
+        self.color = color
 
 
 class Knight:
-    pass
+    def __init__(self, color):
+        self.color = color
 
 
 class Pawn:
@@ -35,14 +37,14 @@ class Pawn:
         possible_squares = []
         if (
             exist(pos_y + self.mult, pos_x)
-            and board[pos_y + self.mult][pos_x][0] == Const.none
+            and board[pos_y + self.mult][pos_x][0] == None
         ):
             possible_squares.append(pos_y + self.mult)
             possible_squares.append(pos_x)
             if (
                 exist(pos_y + 2 * self.mult, pos_x)
                 and self.first_position
-                and board[pos_y + 2 * self.mult][pos_x][0] == Const.none
+                and board[pos_y + 2 * self.mult][pos_x][0] == None
             ):
                 possible_squares.append(pos_y + 2 * self.mult)
                 possible_squares.append(pos_x)
@@ -65,14 +67,16 @@ class Pawn:
 
     def move_pawn(self, selected, destin, board):
         self.first_position = False
-        board[selected[0]][selected[1]] = (Const.none, Const.none)
+        board[selected[0]][selected[1]] = (None, None)
         board[destin[0]][destin[1]] = (Const.pawn, self.color)
         return board
 
 
 class Queen:
-    pass
+    def __init__(self, color):
+        self.color = color
 
 
 class Rook:
-    pass
+    def __init__(self, color):
+        self.color = color

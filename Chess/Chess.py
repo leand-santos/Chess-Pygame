@@ -35,33 +35,33 @@ def Draw_Pieces(board):
         for j in range(8):
             pos_x = Const.width // 8 * j + Const.center_width
             pos_y = Const.height // 8 * i + Const.center_height
-            if board[i][j][0] == Const.bishop:
-                if board[i][j][1]:
+            if board[i][j] == Const.bishop:
+                if board[i][j]:
                     Image.screen.blit(Image.black_bishop, (pos_x, pos_y))
                 else:
                     Image.screen.blit(Image.white_bishop, (pos_x, pos_y))
-            elif board[i][j][0] == Const.king:
-                if board[i][j][1]:
+            elif board[i][j] == Const.king:
+                if board[i][j]:
                     Image.screen.blit(Image.black_king, (pos_x, pos_y))
                 else:
                     Image.screen.blit(Image.white_king, (pos_x, pos_y))
-            elif board[i][j][0] == Const.knight:
-                if board[i][j][1]:
+            elif board[i][j] == Const.knight:
+                if board[i][j]:
                     Image.screen.blit(Image.black_knight, (pos_x, pos_y))
                 else:
                     Image.screen.blit(Image.white_knight, (pos_x, pos_y))
-            elif board[i][j][0] == Const.pawn:
-                if board[i][j][1]:
+            elif board[i][j] == Const.pawn:
+                if board[i][j]:
                     Image.screen.blit(Image.black_pawn, (pos_x, pos_y))
                 else:
                     Image.screen.blit(Image.white_pawn, (pos_x, pos_y))
-            elif board[i][j][0] == Const.queen:
-                if board[i][j][1]:
+            elif board[i][j] == Const.queen:
+                if board[i][j]:
                     Image.screen.blit(Image.black_queen, (pos_x, pos_y))
                 else:
                     Image.screen.blit(Image.white_queen, (pos_x, pos_y))
-            elif board[i][j][0] == Const.rook:
-                if board[i][j][1]:
+            elif board[i][j] == Const.rook:
+                if board[i][j]:
                     Image.screen.blit(Image.black_rook, (pos_x, pos_y))
                 else:
                     Image.screen.blit(Image.white_rook, (pos_x, pos_y))

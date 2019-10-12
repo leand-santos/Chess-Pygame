@@ -1,5 +1,5 @@
 import pygame
-
+from Pieces import *
 
 class Const:
     # Numeric constants
@@ -11,7 +11,6 @@ class Const:
     pawn = 4
     queen = 5
     rook = 6
-    none = 7
 
     black = True
     white = False
@@ -21,14 +20,14 @@ class Const:
 
     # Initial board
     matrix = \
-    [(rook, black), (knight, black), (bishop, black), (queen, black), (king, black), (bishop, black), (knight, black), (rook, black)], \
-    [(pawn, black), (pawn, black), (pawn, black), (pawn, black), (pawn, black), (pawn, black), (pawn, black), (pawn, black)], \
-    [(none, none), (none, none), (none, none), (pawn, white), (none, none), (none, none), (none, none), (none, none)], \
-    [(none, none), (none, none), (none, none), (none, none), (none, none), (none, none), (none, none), (none, none)], \
-    [(none, none), (none, none), (none, none), (none, none), (none, none), (none, none), (none, none), (none, none)], \
-    [(none, none), (none, none), (none, none), (none, none), (none, none), (none, none), (none, none), (none, none)], \
-    [(pawn, white), (pawn, white), (pawn, white), (pawn, white), (pawn, white), (pawn, white), (pawn, white), (pawn, white)], \
-    [(rook, white), (knight, white), (bishop, white), (queen, white), (king, white), (bishop, white), (knight, white), (rook, white)]
+    [Rook(black), Knight(black), Bishop(black), Queen(black), King(black), Bishop(black), Knight(black), Rook(black)], \
+    [Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black)], \
+    [None, None, None, Pawn(white), None, None, None, None], \
+    [None, None, None, None, None, None, None, None], \
+    [None, None, None, None, None, None, None, None], \
+    [None, None, None, None, None, None, None, None], \
+    [Pawn(white), Pawn(white), Pawn(white), Pawn(white), Pawn(white), Pawn(white), Pawn(white), Pawn(white)], \
+    [Rook(white), Knight(white), Bishop(white), Queen(white), King(white), Bishop(white), Knight(white), Rook(white)]
 
 class Image:
     # Image load
