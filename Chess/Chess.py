@@ -160,6 +160,7 @@ def main():
             if event.type == pygame.QUIT:
                 end = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                print(possible_squares,destin,selected)
                 if possible_squares:
                     destin = verify_movement(
                         possible_squares, (position_converter(event))
@@ -168,7 +169,10 @@ def main():
                     board = move_piece(destin, selected, board)
                     turn = change_turn(turn) 
                     possible_squares = []
-                possible_squares, selected = piece_identifier(event, board, turn)
+                    destin = []
+                else:
+                    possible_squares, selected = piece_identifier(event, board, turn)
+                print(possible_squares,destin,selected)
         pygame.display.update()
 
 
