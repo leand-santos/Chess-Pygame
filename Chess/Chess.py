@@ -68,53 +68,89 @@ def Draw_Pieces(board):
 
 
 def Draw_Possible_Squares(board, possible_squares):
-    for i in range(0,len(possible_squares),2):
+    for i in range(0, len(possible_squares), 2):
         Image.screen.blit(
             Image.brown_square,
             (
-                Const.width // 8 * possible_squares[i],
                 Const.height // 8 * possible_squares[i + 1],
+                Const.width // 8 * possible_squares[i],
             ),
         )
 
 
-def piece_identifier(event, board):
-    pos_x = event.pos[0] // (Const.width // 8)
-    pos_y = event.pos[1] // (Const.height // 8)
-    if board[pos_y][pos_x] == (Const.bishop, True):
+def position_converter(event):
+    return (event.pos[1] // (Const.height // 8), event.pos[0] // (Const.width // 8))
+
+
+def piece_identifier(event, board, turn):
+    pos_y, pos_x = position_converter(event)
+    if board[pos_y][pos_x] == (Const.bishop, True) and turn == Const.black:
         print("black_bishop")
-    elif board[pos_y][pos_x] == (Const.bishop, False):
+    elif board[pos_y][pos_x] == (Const.bishop, False) and turn == Const.white:
         print("white_bishop")
-    elif board[pos_y][pos_x] == (Const.king, True):
+    elif board[pos_y][pos_x] == (Const.king, True) and turn == Const.black:
         print("black_king")
-    elif board[pos_y][pos_x] == (Const.king, False):
+    elif board[pos_y][pos_x] == (Const.king, False) and turn == Const.white:
         print("white_king")
-    elif board[pos_y][pos_x] == (Const.knight, True):
+    elif board[pos_y][pos_x] == (Const.knight, True) and turn == Const.black:
         print("black_knight")
-    elif board[pos_y][pos_x] == (Const.knight, False):
+    elif board[pos_y][pos_x] == (Const.knight, False) and turn == Const.white:
         print("white_knight")
-    elif board[pos_y][pos_x] == (Const.pawn, True):
+    elif board[pos_y][pos_x] == (Const.pawn, True) and turn == Const.black:
         p1 = Pawn(Const.black)
-        return p1.mark_movements(pos_x, pos_y, board)
+        return p1.mark_movements(pos_y, pos_x, board), (pos_y, pos_x)
         print("black_pawn")
-    elif board[pos_y][pos_x] == (Const.pawn, False):
+    elif board[pos_y][pos_x] == (Const.pawn, False) and turn == Const.white:
+        p2 = Pawn(Const.white)
+        return p2.mark_movements(pos_y, pos_x, board), (pos_y, pos_x)
         print("white_pawn")
-    elif board[pos_y][pos_x] == (Const.queen, True):
+    elif board[pos_y][pos_x] == (Const.queen, True) and turn == Const.black:
         print("black_queen")
-    elif board[pos_y][pos_x] == (Const.queen, False):
+    elif board[pos_y][pos_x] == (Const.queen, False) and turn == Const.white:
         print("white_queen")
-    elif board[pos_y][pos_x] == (Const.rook, True):
+    elif board[pos_y][pos_x] == (Const.rook, True) and turn == Const.black:
         print("black_rook")
-    elif board[pos_y][pos_x] == (Const.rook, False):
+    elif board[pos_y][pos_x] == (Const.rook, False) and turn == Const.white:
         print("white_rook")
+    return [], []
+
+
+def verify_movement(possible_squares, selected):
+    for i in range(0, len(possible_squares), 2):
+        if (
+            possible_squares[i] == selected[0]
+            and possible_squares[i + 1] == selected[1]
+        ):
+            return [possible_squares[i], possible_squares[i + 1]]
     return []
+
+
+def change_turn(turn):
+    if turn == Const.white:
+        return Const.black
+    else:
+        return Const.white
+
+
+def move_piece(destin, selected, board):
+    if board[selected[0]][selected[1]][0] == Const.pawn:
+        p3 = Pawn(board[selected[0]][selected[1]][1])
+        print(selected)
+        board = p3.move_pawn(selected, destin, board)
+        return board
+    return board
 
 
 def main():
     end = True
-    board = Const.matrix
     pygame.display.set_caption("Chess")
+
+    turn = Const.white
+    board = Const.matrix
     possible_squares = []
+    selected = []
+    destin = []
+
     while end:
         Draw_Board(board)
         if possible_squares:
@@ -124,7 +160,15 @@ def main():
             if event.type == pygame.QUIT:
                 end = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                possible_squares = piece_identifier(event, board)
+                if possible_squares:
+                    destin = verify_movement(
+                        possible_squares, (position_converter(event))
+                    )
+                if destin:
+                    board = move_piece(destin, selected, board)
+                    turn = change_turn(turn) 
+                    possible_squares = []
+                possible_squares, selected = piece_identifier(event, board, turn)
         pygame.display.update()
 
 
