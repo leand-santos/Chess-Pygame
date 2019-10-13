@@ -81,10 +81,29 @@ class Bishop:
 class King:
     def __init__(self, color):
         self.color = color
+        self.first_position = True
         if color:
             self.enemy_color = False
         else:
             self.enemy_color = True
+
+    def castling(self, pos_y, pos_x, board, side):
+        possible_squares = []
+        if (
+            isinstance(board[pos_y][pos_x + side], Rook)
+            and board[pos_y][pos_x + side].color == self.color
+        ):
+            if board[pos_y][pos_x + side].first_position:
+                if (
+                    len(
+                        travels_towards(
+                            self, pos_y, pos_x + side // abs(side), board, 0, 1 * side // abs(side)
+                        )
+                    )
+                    == (abs(side) - 1) * 2
+                ):
+                    return (pos_y, pos_x + side - side // abs(side))
+        return []
 
     def mark_movements(self, pos_y, pos_x, board):
         possible_squares = []
@@ -94,9 +113,21 @@ class King:
         possible_squares.extend(verify_just_one(self, pos_y, pos_x + 1, board))
         possible_squares.extend(verify_just_one(self, pos_y, pos_x - 1, board))
 
+        if self.first_position:
+            possible_squares.extend(self.castling(pos_y, pos_x, board, 3))
+            possible_squares.extend(self.castling(pos_y, pos_x, board, -4))
+
         return possible_squares
 
     def move_piece(self, selected, destin, board):
+        self.first_position = False
+        if destin[1] - selected[1] > 1:
+            board[destin[0]][destin[1] - 1] = board[destin[0]][destin[1] + 1]
+            board[destin[0]][destin[1] + 1] = None
+        elif destin[1] + selected[1] > 1:
+            board[destin[0]][destin[1] + 1] = board[destin[0]][destin[1] - 1]
+            board[destin[0]][destin[1] - 1] = None
+
         board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
         board[selected[0]][selected[1]] = None
         return board
@@ -126,6 +157,7 @@ class Knight:
         return possible_squares
 
     def move_piece(self, selected, destin, board):
+        self.first_position = False
         board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
         board[selected[0]][selected[1]] = None
         return board
@@ -230,6 +262,7 @@ class Queen:
 class Rook:
     def __init__(self, color):
         self.color = color
+        self.first_position = True
         if color:
             self.enemy_color = False
         else:
@@ -246,6 +279,7 @@ class Rook:
         return possible_squares
 
     def move_piece(self, selected, destin, board):
+        self.first_position = False
         board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
         board[selected[0]][selected[1]] = None
         return board
