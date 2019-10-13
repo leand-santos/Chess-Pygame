@@ -16,7 +16,7 @@ class Const:
     matrix = \
     [Rook(black), Knight(black), Bishop(black), Queen(black), King(black), Bishop(black), Knight(black), Rook(black)], \
     [Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black), Pawn(black)], \
-    [None, None, None, Pawn(white), None, None, None, None], \
+    [None, None, None, None, None, None, None, None], \
     [None, None, None, None, None, None, None, None], \
     [None, None, None, None, None, None, None, None], \
     [None, None, None, None, None, None, None, None], \

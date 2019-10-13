@@ -8,6 +8,44 @@ def exist(pos_y, pos_x):
     return True
 
 
+def travels_towards(self, pos_y, pos_x, board, mult_y, mult_x):
+    possible_squares = []
+    while exist(pos_y, pos_x):
+        if board[pos_y][pos_x] != None and board[pos_y][pos_x].color == self.color:
+            return possible_squares
+        elif (
+            board[pos_y][pos_x] != None
+            and board[pos_y][pos_x].color == self.enemy_color
+        ):
+            possible_squares.append(pos_y)
+            possible_squares.append(pos_x)
+            return possible_squares
+        else:
+            possible_squares.append(pos_y)
+            possible_squares.append(pos_x)
+        pos_y += 1 * mult_y
+        pos_x += 1 * mult_x
+    return possible_squares
+
+
+def verify_just_one(self, pos_y, pos_x, board):
+    possible_squares = []
+    if exist(pos_y, pos_x):
+        if board[pos_y][pos_x] != None and board[pos_y][pos_x].color == self.color:
+            return possible_squares
+        elif (
+            board[pos_y][pos_x] != None
+            and board[pos_y][pos_x].color == self.enemy_color
+        ):
+            possible_squares.append(pos_y)
+            possible_squares.append(pos_x)
+            return possible_squares
+        else:
+            possible_squares.append(pos_y)
+            possible_squares.append(pos_x)
+    return possible_squares
+
+
 class Bishop:
     def __init__(self, color):
         self.color = color
@@ -16,53 +54,81 @@ class Bishop:
         else:
             self.enemy_color = True
 
-    def travels_towards(self, pos_y, pos_x, board, mult_y, mult_x):
-        possible_squares = []
-        while (
-            exist(pos_y, pos_x)
-            and board[pos_y][pos_y].color == self.color
-            and board[pos_y][pos_y].color == self.enemy_color
-            and board[pos_y][pos_y] == None
-        ):
-            possible_squares.append(pos_y)
-            possible_squares.append(pos_x)
-            pos_y += 1 * mult_y
-            pos_x += 1 * mult_x
-        return possible_squares
     def mark_movements(self, pos_y, pos_x, board):
-
         possible_squares = []
-        possible_squares.extend(travels_towards(pos_y + 1, pos_x + 1, board, 1, 1))
-        possible_squares.extend(travels_towards(pos_y - 1, pos_x + 1, board, -1, 1))
-        possible_squares.extend(travels_towards(pos_y + 1, pos_x - 1, board, 1, -1))
-        possible_squares.extend(travels_towards(pos_y - 1, pos_x - 1, board, -1, -1))
+
+        possible_squares.extend(
+            travels_towards(self, pos_y + 1, pos_x + 1, board, 1, 1)
+        )
+        possible_squares.extend(
+            travels_towards(self, pos_y - 1, pos_x + 1, board, -1, 1)
+        )
+        possible_squares.extend(
+            travels_towards(self, pos_y + 1, pos_x - 1, board, 1, -1)
+        )
+        possible_squares.extend(
+            travels_towards(self, pos_y - 1, pos_x - 1, board, -1, -1)
+        )
 
         return possible_squares
 
     def move_piece(self, selected, destin, board):
-        pass
+        board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
+        board[selected[0]][selected[1]] = None
+        return board
 
 
 class King:
     def __init__(self, color):
         self.color = color
+        if color:
+            self.enemy_color = False
+        else:
+            self.enemy_color = True
 
     def mark_movements(self, pos_y, pos_x, board):
-        pass
+        possible_squares = []
+
+        possible_squares.extend(verify_just_one(self, pos_y + 1, pos_x, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 1, pos_x, board))
+        possible_squares.extend(verify_just_one(self, pos_y, pos_x + 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y, pos_x - 1, board))
+
+        return possible_squares
 
     def move_piece(self, selected, destin, board):
-        pass
+        board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
+        board[selected[0]][selected[1]] = None
+        return board
 
 
 class Knight:
     def __init__(self, color):
         self.color = color
+        if color:
+            self.enemy_color = False
+        else:
+            self.enemy_color = True
 
     def mark_movements(self, pos_y, pos_x, board):
-        pass
+        possible_squares = []
+
+        possible_squares.extend(verify_just_one(self, pos_y + 1, pos_x + 2, board))
+        possible_squares.extend(verify_just_one(self, pos_y + 1, pos_x - 2, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 1, pos_x + 2, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 1, pos_x - 2, board))
+
+        possible_squares.extend(verify_just_one(self, pos_y + 2, pos_x + 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y + 2, pos_x - 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 2, pos_x + 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 2, pos_x - 1, board))
+
+        return possible_squares
 
     def move_piece(self, selected, destin, board):
-        pass
+        board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
+        board[selected[0]][selected[1]] = None
+        return board
 
 
 class Pawn:
@@ -82,18 +148,14 @@ class Pawn:
         possible_squares = []
 
         # One square ahead
-        if exist(pos_y + self.mult, pos_x) and board[pos_y + self.mult][pos_x] == None:
-            possible_squares.append(pos_y + self.mult)
-            possible_squares.append(pos_x)
+        possible_squares.extend(verify_just_one(self, pos_y + self.mult, pos_x, board))
 
-            # Two squares ahead
-            if (
-                exist(pos_y + 2 * self.mult, pos_x)
-                and self.first_position
-                and board[pos_y + 2 * self.mult][pos_x] == None
-            ):
-                possible_squares.append(pos_y + 2 * self.mult)
-                possible_squares.append(pos_x)
+        # Two squares ahead
+        if possible_squares:
+            if self.first_position:
+                possible_squares.extend(
+                    verify_just_one(self, pos_y + self.mult * 2, pos_x, board)
+                )
 
         # Enemy on diagonal
         if (
@@ -128,20 +190,62 @@ class Pawn:
 class Queen:
     def __init__(self, color):
         self.color = color
+        if color:
+            self.enemy_color = False
+        else:
+            self.enemy_color = True
 
     def mark_movements(self, pos_y, pos_x, board):
-        pass
+
+        possible_squares = []
+
+        # Diagonals
+        possible_squares.extend(
+            travels_towards(self, pos_y + 1, pos_x + 1, board, 1, 1)
+        )
+        possible_squares.extend(
+            travels_towards(self, pos_y - 1, pos_x + 1, board, -1, 1)
+        )
+        possible_squares.extend(
+            travels_towards(self, pos_y + 1, pos_x - 1, board, 1, -1)
+        )
+        possible_squares.extend(
+            travels_towards(self, pos_y - 1, pos_x - 1, board, -1, -1)
+        )
+
+        # North, South, East, West
+        possible_squares.extend(travels_towards(self, pos_y + 1, pos_x, board, 1, 0))
+        possible_squares.extend(travels_towards(self, pos_y - 1, pos_x, board, -1, 0))
+        possible_squares.extend(travels_towards(self, pos_y, pos_x + 1, board, 0, 1))
+        possible_squares.extend(travels_towards(self, pos_y, pos_x - 1, board, 0, -1))
+
+        return possible_squares
 
     def move_piece(self, selected, destin, board):
-        pass
+        board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
+        board[selected[0]][selected[1]] = None
+        return board
 
 
 class Rook:
     def __init__(self, color):
         self.color = color
+        if color:
+            self.enemy_color = False
+        else:
+            self.enemy_color = True
 
     def mark_movements(self, pos_y, pos_x, board):
-        pass
+        possible_squares = []
+
+        possible_squares.extend(travels_towards(self, pos_y + 1, pos_x, board, 1, 0))
+        possible_squares.extend(travels_towards(self, pos_y - 1, pos_x, board, -1, 0))
+        possible_squares.extend(travels_towards(self, pos_y, pos_x + 1, board, 0, 1))
+        possible_squares.extend(travels_towards(self, pos_y, pos_x - 1, board, 0, -1))
+
+        return possible_squares
 
     def move_piece(self, selected, destin, board):
-        pass
+        board[destin[0]][destin[1]] = board[selected[0]][selected[1]]
+        board[selected[0]][selected[1]] = None
+        return board
