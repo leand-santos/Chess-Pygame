@@ -5,12 +5,6 @@ class Const:
     # Numeric constants
     width = 650
     height = 650
-    bishop = 1
-    king = 2
-    knight = 3
-    pawn = 4
-    queen = 5
-    rook = 6
 
     black = True
     white = False

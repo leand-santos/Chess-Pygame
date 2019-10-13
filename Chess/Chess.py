@@ -68,9 +68,11 @@ def Draw_Pieces(board):
 
 
 def Draw_Possible_Squares(board, possible_squares):
+    green_square = pygame.Surface((Const.width//8,Const.height//8))
+    green_square.fill((0, 255, 0, 200))
     for i in range(0, len(possible_squares), 2):
         Image.screen.blit(
-            Image.brown_square,
+            green_square,
             (
                 Const.height // 8 * possible_squares[i + 1],
                 Const.width // 8 * possible_squares[i],
