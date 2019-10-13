@@ -113,6 +113,11 @@ class King:
         possible_squares.extend(verify_just_one(self, pos_y, pos_x + 1, board))
         possible_squares.extend(verify_just_one(self, pos_y, pos_x - 1, board))
 
+        possible_squares.extend(verify_just_one(self, pos_y + 1, pos_x + 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 1, pos_x + 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y + 1, pos_x - 1, board))
+        possible_squares.extend(verify_just_one(self, pos_y - 1, pos_x - 1, board))
+        
         if self.first_position:
             possible_squares.extend(self.castling(pos_y, pos_x, board, 3))
             possible_squares.extend(self.castling(pos_y, pos_x, board, -4))
@@ -121,10 +126,10 @@ class King:
 
     def move_piece(self, selected, destin, board):
         self.first_position = False
-        if destin[1] - selected[1] > 1:
+        if destin[1] - selected[1] > 2:
             board[destin[0]][destin[1] - 1] = board[destin[0]][destin[1] + 1]
             board[destin[0]][destin[1] + 1] = None
-        elif destin[1] + selected[1] > 1:
+        elif destin[1] + selected[1] < 2:
             board[destin[0]][destin[1] + 1] = board[destin[0]][destin[1] - 1]
             board[destin[0]][destin[1] - 1] = None
 
