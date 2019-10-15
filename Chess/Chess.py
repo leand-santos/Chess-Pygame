@@ -67,17 +67,33 @@ def Draw_Pieces(board):
                     Image.screen.blit(Image.white_rook, (pos_x, pos_y))
 
 
-def Draw_Possible_Squares(board, possible_squares):
-    green_square = pygame.Surface((Const.width//8,Const.height//8), pygame.SRCALPHA)
+def Draw_Possible_Squares(board, possible_squares, selected):
+    green_square = pygame.Surface(
+        (Const.width // 8, Const.height // 8), pygame.SRCALPHA
+    )
+    red_square = pygame.Surface((Const.width // 8, Const.height // 8), pygame.SRCALPHA)
     green_square.fill((0, 255, 0, 35))
+    red_square.fill((255, 0, 0, 35))
+    Image.screen.blit(
+        green_square, (Const.height // 8 * selected[1], Const.width // 8 * selected[0])
+    )
     for i in range(0, len(possible_squares), 2):
-        Image.screen.blit(
-            green_square,
-            (
-                Const.height // 8 * possible_squares[i + 1],
-                Const.width // 8 * possible_squares[i],
-            ),
-        )
+        if board[possible_squares[i]][possible_squares[i + 1]] != None:
+            Image.screen.blit(
+                red_square,
+                (
+                    Const.height // 8 * possible_squares[i + 1],
+                    Const.width // 8 * possible_squares[i],
+                ),
+            )
+        else:
+            Image.screen.blit(
+                green_square,
+                (
+                    Const.height // 8 * possible_squares[i + 1],
+                    Const.width // 8 * possible_squares[i],
+                ),
+            )
 
 
 def position_converter(event):
@@ -86,7 +102,7 @@ def position_converter(event):
 
 def piece_identifier(event, board, turn):
     pos_y, pos_x = position_converter(event)
-    if  board[pos_y][pos_x] != None and turn == board[pos_y][pos_x].color:
+    if board[pos_y][pos_x] != None and turn == board[pos_y][pos_x].color:
         return board[pos_y][pos_x].mark_movements(pos_y, pos_x, board), (pos_y, pos_x)
     return [], []
 
@@ -126,7 +142,7 @@ def main():
     while end:
         Draw_Board(board)
         if possible_squares:
-            Draw_Possible_Squares(board, possible_squares)
+            Draw_Possible_Squares(board, possible_squares, selected)
         Draw_Pieces(board)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -138,7 +154,7 @@ def main():
                     )
                 if destin:
                     board = move_piece(destin, selected, board)
-                    turn = change_turn(turn) 
+                    turn = change_turn(turn)
                     possible_squares = []
                     destin = []
                 else:

@@ -126,10 +126,10 @@ class King:
 
     def move_piece(self, selected, destin, board):
         self.first_position = False
-        if destin[1] - selected[1] > 2:
+        if destin[1] - selected[1] > 1:
             board[destin[0]][destin[1] - 1] = board[destin[0]][destin[1] + 1]
             board[destin[0]][destin[1] + 1] = None
-        elif destin[1] + selected[1] < 2:
+        elif destin[1] - selected[1] < 1:
             board[destin[0]][destin[1] + 1] = board[destin[0]][destin[1] - 1]
             board[destin[0]][destin[1] - 1] = None
 
@@ -185,14 +185,18 @@ class Pawn:
         possible_squares = []
 
         # One square ahead
-        possible_squares.extend(verify_just_one(self, pos_y + self.mult, pos_x, board))
+        if exist(pos_y + self.mult, pos_x) and board[pos_y + self.mult][pos_x] == None:
+            possible_squares.append(pos_y + self.mult)
+            possible_squares.append(pos_x)
 
         # Two squares ahead
-        if possible_squares:
-            if self.first_position:
-                possible_squares.extend(
-                    verify_just_one(self, pos_y + self.mult * 2, pos_x, board)
-                )
+            if (
+                    exist(pos_y + 2 * self.mult, pos_x)
+                    and self.first_position
+                    and board[pos_y + 2 * self.mult][pos_x] == None
+                ):
+                    possible_squares.append(pos_y + 2 * self.mult)
+                    possible_squares.append(pos_x)
 
         # Enemy on diagonal
         if (
