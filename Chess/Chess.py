@@ -100,8 +100,8 @@ def position_converter(event):
     return (event.pos[1] // (Const.height // 8), event.pos[0] // (Const.width // 8))
 
 
-def piece_identifier(event, board, turn):
-    pos_y, pos_x = position_converter(event)
+def piece_identifier(coordinates, board, turn):
+    pos_y, pos_x = coordinates
     if board[pos_y][pos_x] != None and turn == board[pos_y][pos_x].color:
         return board[pos_y][pos_x].mark_movements(pos_y, pos_x, board), (pos_y, pos_x)
     return [], []
@@ -128,11 +128,40 @@ def move_piece(destin, selected, board):
     board[selected[0]][selected[1]].move_piece(selected, destin, board)
     return board
 
+def verify_threaten(actual, board): # Verifica se a nova posicao vai dar cheque
+    possible_squares = board[actual[0]][actual[1]].mark_movements(actual[0], actual[1], board)
+    for i in range(0, len(possible_squares), 2):
+        if isinstance(board[possible_squares[i]][possible_squares[i+1]], King):
+            if board[actual[0]][actual[1]].color != board[possible_squares[i]][possible_squares[i+1]].color:
+                return True
+    return False
+
+def check_escape(board, color): # Percorre a matriz e verifica se o inimigo ainda esta dando cheque
+    enemy = (not color)
+    for i in range(8):
+        for j in range(8):
+            if board[i][j] != None and board[i][j].color == enemy:
+                if verify_threaten(board[i][j],board):
+                    return False
+    return True
+                
+
+def check_verify(selected, board, turn): # Verifica se o vetor possivel tira o rei do cheque
+    maybe_possible_squares = board[selected[0]][selected[1]].mark_movements(selected[0],selected[1],board)
+    possible_squares = []
+    for i in range(0, len(maybe_possible_squares), 2):
+        test_board = board
+        test_board[maybe_possible_squares[i]][maybe_possible_squares[i+1]] = test_board[selected[0]][selected[1]]
+        if check_escape(test_board, turn):
+            possible_squares.append(possible_squares[i])
+            possible_squares.append(possible_squares[i+1])
+    return possible_squares
 
 def main():
     end = True
     pygame.display.set_caption("Chess")
-
+    
+    check = False
     turn = Const.white
     board = Const.matrix
     possible_squares = []
@@ -154,11 +183,15 @@ def main():
                     )
                 if destin:
                     board = move_piece(destin, selected, board)
+                    check = verify_threaten(destin, board)
                     turn = change_turn(turn)
                     possible_squares = []
                     destin = []
-                else:
-                    possible_squares, selected = piece_identifier(event, board, turn)
+                possible_squares, selected = piece_identifier(position_converter(event), board, turn)
+                """ if check:
+                    print(selected)
+                    possible_squares = check_verify(selected, board, turn) """
+                    
         pygame.display.update()
 
 
