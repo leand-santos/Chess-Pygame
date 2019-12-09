@@ -126,11 +126,13 @@ class King:
 
     def move_piece(self, selected, destin, board):
         self.first_position = False
-        if destin[1] - selected[1] > 1:
+        print(destin[1] - selected[1])
+        if destin[1] - selected[1] == 2:
             print("entrou1")
             board[destin[0]][destin[1] - 1] = board[destin[0]][destin[1] + 1]
             board[destin[0]][destin[1] + 1] = None
-        elif destin[1] - selected[1] < 1:
+        elif destin[1] - selected[1] == -3:
+            print("entrou2")
             board[destin[0]][destin[1] + 1] = board[destin[0]][destin[1] - 1]
             board[destin[0]][destin[1] - 1] = None
 
