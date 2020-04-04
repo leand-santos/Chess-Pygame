@@ -1,3 +1,5 @@
 {
-    "python.formatting.provider": "black"
+    "python.pythonPath": "/home/leandro/Área de trabalho/All Repositories/Pygame-Env/pg/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }
