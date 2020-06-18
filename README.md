@@ -1,6 +1,6 @@
-# Snake
+# Chess-Pygame
 
-A simple snake game built with pygame.
+A simple chess game built with pygame.
 
 ## Prerequisites
 
@@ -26,8 +26,6 @@ pip install pygame
 
 ## Running the game
 
-Inside of snake folder, execute:
-
 ```
-python main.py
+python chess.py
 ```
