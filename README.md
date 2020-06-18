@@ -26,6 +26,8 @@ pip install pygame
 
 ## Running the game
 
+Inside of snake folder, execute:
+
 ```
 python main.py
 ```
